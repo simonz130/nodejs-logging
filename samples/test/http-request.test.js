@@ -29,7 +29,10 @@ const cmd = 'node http-request';
 
 describe('http-request', () => {
   after(async () => {
-    await logging.log(logName).delete().catch(console.warn);
+    await logging
+      .log(logName)
+      .delete()
+      .catch(console.warn);
   });
 
   it('should log an entry', () => {
