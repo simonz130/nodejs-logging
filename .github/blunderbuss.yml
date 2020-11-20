@@ -1,6 +1,4 @@
 assign_issues:
-  - sofisl
-  - bcoe 
+  - googleapis/api-logging
 assign_prs:
-  - sofisl
-  - bcoe
+  - googleapis/api-logging

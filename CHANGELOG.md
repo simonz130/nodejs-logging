@@ -4,6 +4,72 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.1.1](https://www.github.com/googleapis/nodejs-logging/compare/v8.1.0...v8.1.1) (2020-11-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency type-fest to ^0.19.0 ([#945](https://www.github.com/googleapis/nodejs-logging/issues/945)) ([bd5f001](https://www.github.com/googleapis/nodejs-logging/commit/bd5f00173b92a56e2524c8222f74db1216924ec3))
+
+## [8.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.10...v8.1.0) (2020-11-09)
+
+
+### Features
+
+* accept entry.timestamp string input in RFC3339 format ([#937](https://www.github.com/googleapis/nodejs-logging/issues/937)) ([869bbaf](https://www.github.com/googleapis/nodejs-logging/commit/869bbafe3790d6d6f21a1f538549a1f336d6f918))
+
+
+### Bug Fixes
+
+* **deps:** roll back dependency @google-cloud/logging to ^8.0.9 ([#940](https://www.github.com/googleapis/nodejs-logging/issues/940)) ([2a3ad40](https://www.github.com/googleapis/nodejs-logging/commit/2a3ad405683421f5d2099da1b658fe111dc336d2))
+
+### [8.0.10](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.9...v8.0.10) (2020-11-06)
+
+
+### Bug Fixes
+
+* do not modify options object, use defaultScopes ([#935](https://www.github.com/googleapis/nodejs-logging/issues/935)) ([fd1e63a](https://www.github.com/googleapis/nodejs-logging/commit/fd1e63a56f19b5af48fbba40d136a4ce640ca2f3))
+
+### [8.0.9](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.8...v8.0.9) (2020-11-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency dot-prop to v6 ([#908](https://www.github.com/googleapis/nodejs-logging/issues/908)) ([e696466](https://www.github.com/googleapis/nodejs-logging/commit/e6964662276239b86ccdfcd3e448df65d2013522))
+* **deps:** update dependency type-fest to ^0.18.0 ([#912](https://www.github.com/googleapis/nodejs-logging/issues/912)) ([dafdf8e](https://www.github.com/googleapis/nodejs-logging/commit/dafdf8eedc213c25f23ba5cc5cfa8eea4b2e9727))
+
+### [8.0.8](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.7...v8.0.8) (2020-10-06)
+
+
+### Bug Fixes
+
+* **deps:** upgrade @google-cloud/common ([#905](https://www.github.com/googleapis/nodejs-logging/issues/905)) ([228864b](https://www.github.com/googleapis/nodejs-logging/commit/228864b7c59c80f126c3dbd2d8c8cb4a20adcdf6))
+
+### [8.0.7](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.6...v8.0.7) (2020-10-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/common to v3 ([#892](https://www.github.com/googleapis/nodejs-logging/issues/892)) ([b7c0f96](https://www.github.com/googleapis/nodejs-logging/commit/b7c0f9676fd1bacfd336a42ffac53f8765d99e3e))
+* **deps:** update dependency @google-cloud/projectify to v2 ([#895](https://www.github.com/googleapis/nodejs-logging/issues/895)) ([884e905](https://www.github.com/googleapis/nodejs-logging/commit/884e905f7f8cc1670174f507a80dfc011a962a3b))
+* **deps:** update dependency gcp-metadata to v4 ([#893](https://www.github.com/googleapis/nodejs-logging/issues/893)) ([ce79a7c](https://www.github.com/googleapis/nodejs-logging/commit/ce79a7cdb345f0fa8bd87c82df400427c1a984ea))
+* **deps:** update dependency google-auth-library to v6 ([#894](https://www.github.com/googleapis/nodejs-logging/issues/894)) ([d2bbe3c](https://www.github.com/googleapis/nodejs-logging/commit/d2bbe3c69595177f90eb19702534b77fc390e8aa))
+* **deps:** update dependency type-fest to ^0.17.0 ([#901](https://www.github.com/googleapis/nodejs-logging/issues/901)) ([860b795](https://www.github.com/googleapis/nodejs-logging/commit/860b795331885da38d5f91d1af9b1b313d3a59a3))
+
+### [8.0.6](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.5...v8.0.6) (2020-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency yargs to v16 ([#889](https://www.github.com/googleapis/nodejs-logging/issues/889)) ([08ee746](https://www.github.com/googleapis/nodejs-logging/commit/08ee746ddf08f38528d350cd394e903d41d1d621))
+
+### [8.0.5](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.4...v8.0.5) (2020-08-18)
+
+
+### Bug Fixes
+
+* **deps:** require google-gax 2.7.0 ([#879](https://www.github.com/googleapis/nodejs-logging/issues/879)) ([50b4be0](https://www.github.com/googleapis/nodejs-logging/commit/50b4be07c971295d933c3f5833fa40b1c8fc8eaf))
+
 ### [8.0.4](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.3...v8.0.4) (2020-08-14)
 
 

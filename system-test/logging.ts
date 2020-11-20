@@ -34,13 +34,12 @@ nock(HOST_ADDRESS)
   .replyWithError({code: 'ENOTFOUND'})
   .persist();
 
-describe('Logging', async () => {
+describe('Logging', () => {
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
   const storage = new Storage();
   const logging = new Logging();
 
-  const PROJECT_ID = await logging.auth.getProjectId();
   const TESTS_PREFIX = 'nodejs-logging-system-test';
   const WRITE_CONSISTENCY_DELAY_MS = 5000;
 
@@ -49,19 +48,22 @@ describe('Logging', async () => {
   const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
   const topic = pubsub.topic(generateName());
 
-  const serviceAccount = (await logging.auth.getCredentials()).client_email;
-
-  await bucket.create();
-  await bucket.iam.setPolicy({
-    bindings: [
-      {
-        role: 'roles/storage.admin',
-        members: [`serviceAccount:${serviceAccount}`],
-      },
-    ],
+  let PROJECT_ID: string;
+  before(async () => {
+    const serviceAccount = (await logging.auth.getCredentials()).client_email;
+    PROJECT_ID = await logging.auth.getProjectId();
+    await bucket.create();
+    await bucket.iam.setPolicy({
+      bindings: [
+        {
+          role: 'roles/storage.admin',
+          members: [`serviceAccount:${serviceAccount}`],
+        },
+      ],
+    });
+    await dataset.create();
+    await topic.create();
   });
-  await dataset.create();
-  await topic.create();
 
   after(async () => {
     const oneHourAgo = new Date();
@@ -72,7 +74,6 @@ describe('Logging', async () => {
       deleteDatasets(),
       deleteTopics(),
       deleteSinks(),
-      deleteLogs(),
     ]);
 
     async function deleteBuckets() {
@@ -97,66 +98,6 @@ describe('Logging', async () => {
 
     async function deleteSinks() {
       await getAndDelete(logging.getSinks.bind(logging));
-    }
-
-    async function deleteLogs() {
-      const maxPatienceMs = 300000; // 5 minutes.
-      let logs;
-
-      try {
-        [logs] = await logging.getLogs({
-          pageSize: 10000,
-        });
-      } catch (e) {
-        console.warn('Error retrieving logs:');
-        console.warn(`  ${e.message}`);
-        console.warn('No test logs were deleted');
-        return;
-      }
-
-      const logsToDelete = logs.filter(log => {
-        return (
-          log.name.startsWith(TESTS_PREFIX) &&
-          getDateFromGeneratedName(log.name) < oneHourAgo
-        );
-      });
-
-      if (logsToDelete.length > 0) {
-        console.log('Deleting', logsToDelete.length, 'test logs...');
-      }
-
-      let numLogsDeleted = 0;
-      for (const log of logsToDelete) {
-        try {
-          await log.delete();
-          numLogsDeleted++;
-
-          // A one second gap is preferred between delete calls to avoid rate
-          // limiting.
-          let timeoutMs = 1000;
-          if (numLogsDeleted * 1000 > maxPatienceMs) {
-            // This is taking too long. If we hit the rate limit, we'll
-            // hopefully scoop up the stragglers on a future test run.
-            timeoutMs = 10;
-          }
-          await new Promise(res => setTimeout(res, timeoutMs));
-        } catch (e) {
-          if (e.code === 8) {
-            console.warn(
-              'Rate limit reached. The next test run will attempt to delete the rest'
-            );
-            break;
-          }
-          if (e.code !== 5) {
-            // Log exists, but couldn't be deleted.
-            console.warn(`Deleting ${log.name} failed:`, e.message);
-          }
-        }
-      }
-
-      if (logsToDelete.length > 0) {
-        console.log(`${numLogsDeleted}/${logsToDelete.length} logs deleted`);
-      }
     }
 
     async function getAndDelete(method: Function) {
@@ -316,19 +257,25 @@ describe('Logging', async () => {
       function pollForMessages() {
         numAttempts++;
 
-        log.getEntries({autoPaginate: false}, (err, entries) => {
-          if (err) {
-            callback(err);
-            return;
-          }
+        const time = new Date();
+        time.setHours(time.getHours() - 1);
 
-          if (entries!.length < numExpectedMessages && numAttempts < 8) {
-            setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
-            return;
-          }
+        log.getEntries(
+          {autoPaginate: false, filter: `timestamp > "${time.toISOString()}"`},
+          (err, entries) => {
+            if (err) {
+              callback(err);
+              return;
+            }
 
-          callback(null, entries);
-        });
+            if (entries!.length < numExpectedMessages && numAttempts < 8) {
+              setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
+              return;
+            }
+
+            callback(null, entries);
+          }
+        );
       }
     }
 
@@ -598,7 +545,6 @@ describe('Logging', async () => {
 
         getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
           assert.ifError(err);
-
           const entry = entries![0];
 
           assert.strictEqual(entry.data, text);

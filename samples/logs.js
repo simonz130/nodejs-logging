@@ -60,38 +60,6 @@ async function writeLogEntry(logName) {
   // [END logging_write_log_entry]
 }
 
-async function writeLogEntryAdvanced(logName, options) {
-  // [START logging_write_log_entry_advanced]
-  // Imports the Google Cloud client library
-  const {Logging} = require('@google-cloud/logging');
-
-  // Creates a client
-  const logging = new Logging();
-
-  /**
-   * TODO(developer): Uncomment the following lines to run the code.
-   */
-  // const logName = 'Name of the log to write to, e.g. my-log';
-  // const options = {
-  //   resource: {...}, // TODO(developer): Fill this in
-  //   entry: 'Hello, world!'
-  // };
-
-  const log = logging.log(logName);
-
-  // Prepare the entry
-  const entry = log.entry({resource: options.resource}, options.entry);
-
-  async function writeLogEntry() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=write
-    await log.write(entry);
-    console.log(`Wrote to ${logName}`);
-  }
-  writeLogEntry();
-  // [END logging_write_log_entry_advanced]
-}
-
 async function listLogs() {
   // [START logging_list_logs]
   // Imports the Google Cloud client library
@@ -128,8 +96,7 @@ async function listLogEntries(logName) {
 
   async function printEntryMetadata() {
     // List the most recent entries for a given log
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
+    // See https://googleapis.dev/nodejs/logging/latest/Logging.html#getEntries
     const [entries] = await log.getEntries();
     console.log('Logs:');
     entries.forEach(entry => {
@@ -167,8 +134,7 @@ async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
   };
 
   async function printEntryMetadata() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
+    // See https://googleapis.dev/nodejs/logging/latest/Logging.html#getEntries
     const [entries] = await logging.getEntries(options);
     console.log('Logs:');
     entries.forEach(entry => {
@@ -177,7 +143,7 @@ async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
     });
   }
   printEntryMetadata();
-  // [START logging_list_log_entries_advanced]
+  // [END logging_list_log_entries_advanced]
 }
 
 async function deleteLog(logName) {
@@ -198,8 +164,7 @@ async function deleteLog(logName) {
   async function deleteLog() {
     // Deletes a logger and all its entries.
     // Note that a deletion can take several minutes to take effect.
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=delete
+    // See https://googleapis.dev/nodejs/logging/latest/Log.html#delete
     await log.delete();
     console.log(`Deleted log: ${logName}`);
   }
@@ -240,28 +205,6 @@ async function main() {
     .command('list-logs', 'Lists logs in your project.', {}, listLogs)
     .command('list-simple <logName>', 'Lists log entries.', {}, opts =>
       listLogEntries(opts.logName)
-    )
-    .command(
-      'write <logName> <resource> <entry>',
-      'Writes a log entry to the specified log.',
-      {},
-      opts => {
-        try {
-          opts.resource = JSON.parse(opts.resource);
-        } catch (err) {
-          console.error('"resource" must be a valid JSON string!');
-          return;
-        }
-
-        try {
-          opts.entry = JSON.parse(opts.entry);
-        } catch (err) {
-          console.error('"entry" must be a valid JSON string!');
-          return;
-        }
-
-        writeLogEntryAdvanced(opts.logName, opts);
-      }
     )
     .command(
       'write-simple <logName>',
